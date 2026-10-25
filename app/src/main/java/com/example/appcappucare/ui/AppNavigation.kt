@@ -1,10 +1,7 @@
 package com.example.appcappucare.ui
 
-import com.example.appcappucare.viewmodel.ProductoViewModel
 
-class AppNavigation(viewModel: ProductoViewModel) {
-    package com.example.appcappucare.ui
-    import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.NavHost
     import androidx.navigation.compose.composable
     import androidx.navigation.compose.rememberNavController
     import androidx.compose.runtime.Composable
@@ -33,4 +30,3 @@ class AppNavigation(viewModel: ProductoViewModel) {
             }
         }
     }
-}
