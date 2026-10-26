@@ -1,7 +1,11 @@
 package com.example.appcappucare.ui
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -12,6 +16,9 @@ import com.example.appcappucare.viewmodel.ProductoViewModel
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(viewModel: ProductoViewModel, onNavigateBack: () -> Unit = {}) {
+    val productos by viewModel.todosLosProductos.collectAsState()
+
+    var productoId by remember { mutableIntStateOf(0) }
     var codigo by remember { mutableStateOf("") }
     var nombre by remember { mutableStateOf("") }
     var categoria by remember { mutableStateOf("") }
@@ -24,16 +31,44 @@ fun HomeScreen(viewModel: ProductoViewModel, onNavigateBack: () -> Unit = {}) {
         BarcodeScannerScreen(onBarcodeScanned = { valorEscaneado ->
             codigo = valorEscaneado
             mostrarEscaner = false
+
+            val productoExistente = productos.find { it.codigo == valorEscaneado }
+            if (productoExistente != null) {
+                productoId = productoExistente.id
+                nombre = productoExistente.nombre
+                categoria = productoExistente.categoria
+                cantidad = productoExistente.cantidadDisponible.toString()
+                nivelMinimo = productoExistente.nivelMinimo.toString()
+            } else {
+                productoId = 0
+                nombre = ""
+                categoria = ""
+                cantidad = ""
+                nivelMinimo = ""
+            }
         })
     } else {
         Scaffold(
-            topBar = { TopAppBar(title = { Text("Registrar Insumo - Cappucare") }) }
+            topBar = {
+                TopAppBar(
+                    title = { Text("Registrar / Actualizar Insumo") },
+                    navigationIcon = {
+                        IconButton(onClick = onNavigateBack) {
+                            Icon(
+                                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                                contentDescription = "Volver"
+                            )
+                        }
+                    }
+                )
+            }
         ) { paddingValues ->
             Column(
                 modifier = Modifier
                     .padding(paddingValues)
                     .padding(16.dp)
-                    .fillMaxSize(),
+                    .fillMaxSize()
+                    .verticalScroll(rememberScrollState()),
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 Row(
@@ -98,14 +133,24 @@ fun HomeScreen(viewModel: ProductoViewModel, onNavigateBack: () -> Unit = {}) {
                             mensajeError = "Ingresa un nivel mínimo válido."
                         } else {
                             mensajeError = ""
-                            viewModel.agregarProducto(codigo, nombre, categoria, cantInt, minInt)
+                            viewModel.guardarOActualizarProducto(
+                                id = productoId,
+                                codigo = codigo,
+                                nombre = nombre,
+                                categoria = categoria,
+                                cantidad = cantInt,
+                                minimo = minInt
+                            )
+                            productoId = 0
                             codigo = ""; nombre = ""; categoria = ""; cantidad = ""; nivelMinimo = ""
                             onNavigateBack()
                         }
                     },
-                    modifier = Modifier.fillMaxWidth().padding(top = 16.dp)
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 16.dp)
                 ) {
-                    Text("Guardar Insumo")
+                    Text("Guardar / Actualizar Insumo")
                 }
             }
         }

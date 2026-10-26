@@ -18,8 +18,17 @@ class ProductoViewModel(private val repository: ProductoRepository) : ViewModel(
             initialValue = emptyList()
         )
 
-    fun agregarProducto(codigo: String, nombre: String, categoria: String, cantidad: Int, minimo: Int) {
-        val nuevoProducto = ProductoEntity(
+    // Agrega un producto nuevo o actualiza uno existente conservando su ID
+    fun guardarOActualizarProducto(
+        id: Int = 0,
+        codigo: String,
+        nombre: String,
+        categoria: String,
+        cantidad: Int,
+        minimo: Int
+    ) {
+        val producto = ProductoEntity(
+            id = id, // Si es un producto nuevo pasa 0 (autoGenera), si existe conserva su ID real
             codigo = codigo,
             nombre = nombre,
             descripcion = "",
@@ -31,7 +40,14 @@ class ProductoViewModel(private val repository: ProductoRepository) : ViewModel(
             estado = "Activo"
         )
         viewModelScope.launch {
-            repository.insertarProducto(nuevoProducto)
+            repository.insertarProducto(producto)
+        }
+    }
+
+    // Elimina el producto especifico buscando por su ID único
+    fun eliminarProducto(producto: ProductoEntity) {
+        viewModelScope.launch {
+            repository.eliminarProducto(producto)
         }
     }
 }

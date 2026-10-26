@@ -1,8 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
-    alias(libs.plugins.kotlin.compose)
-    alias(libs.plugins.ksp)
     alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.ksp)
 }
 
 android {
@@ -28,8 +27,14 @@ android {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
+    kotlinOptions {
+        jvmTarget = "17"
+    }
     buildFeatures {
         compose = true
+    }
+    composeOptions {
+        kotlinCompilerExtensionVersion = "1.5.14"
     }
 }
 
@@ -62,17 +67,17 @@ dependencies {
 
     implementation(libs.androidx.datastore.preferences)
 
-    // CameraX para control de cámara nativa
+    // CameraX
     val camerax_version = "1.3.1"
     implementation("androidx.camera:camera-core:$camerax_version")
     implementation("androidx.camera:camera-camera2:$camerax_version")
     implementation("androidx.camera:camera-lifecycle:$camerax_version")
     implementation("androidx.camera:camera-view:$camerax_version")
 
-    // Google ML Kit para escanear códigos de barras
+    // Google ML Kit
     implementation("com.google.mlkit:barcode-scanning:17.2.0")
 
-    // Accompanist para solicitar permisos en Jetpack Compose
+    // Accompanist
     implementation("com.google.accompanist:accompanist-permissions:0.35.0-alpha")
 
     testImplementation(libs.junit)
@@ -82,4 +87,8 @@ dependencies {
     androidTestImplementation(libs.androidx.junit)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
     debugImplementation(libs.androidx.compose.ui.tooling)
+}
+
+kotlin {
+    jvmToolchain(17)
 }
