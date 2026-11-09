@@ -17,7 +17,6 @@ import com.example.appcappucare.viewmodel.ProductoViewModel
 @Composable
 fun HomeScreen(viewModel: ProductoViewModel, onNavigateBack: () -> Unit = {}) {
     val productos by viewModel.todosLosProductos.collectAsState()
-
     var productoId by remember { mutableIntStateOf(0) }
     var codigo by remember { mutableStateOf("") }
     var nombre by remember { mutableStateOf("") }
@@ -26,6 +25,7 @@ fun HomeScreen(viewModel: ProductoViewModel, onNavigateBack: () -> Unit = {}) {
     var nivelMinimo by remember { mutableStateOf("") }
     var mensajeError by remember { mutableStateOf("") }
     var mostrarEscaner by remember { mutableStateOf(false) }
+
 
     if (mostrarEscaner) {
         BarcodeScannerScreen(onBarcodeScanned = { valorEscaneado ->
@@ -80,6 +80,8 @@ fun HomeScreen(viewModel: ProductoViewModel, onNavigateBack: () -> Unit = {}) {
                         onValueChange = { codigo = it },
                         label = { Text("Código") },
                         modifier = Modifier.weight(1f)
+
+
                     )
                     Button(
                         onClick = { mostrarEscaner = true },

@@ -80,6 +80,21 @@ dependencies {
     // Accompanist
     implementation("com.google.accompanist:accompanist-permissions:0.35.0-alpha")
 
+    // ====================================================================
+    // NUEVO: Retrofit y Corrutinas para consumo de API REST (Guía 14)
+    // ====================================================================
+    implementation("com.squareup.retrofit2:retrofit:2.11.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.11.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.8.0")
+
+    // ====================================================================
+    // NUEVO: Entorno de Pruebas con Kotest, MockK y JUnit5 (Guía 15)
+    // ====================================================================
+    testImplementation("io.kotest:kotest-runner-junit5:5.8.0")
+    testImplementation("io.kotest:kotest-assertions-core:5.8.0")
+    testImplementation("org.junit.jupiter:junit-jupiter:5.10.0")
+    testImplementation("io.mockk:mockk:1.13.10")
+
     testImplementation(libs.junit)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)
@@ -91,4 +106,11 @@ dependencies {
 
 kotlin {
     jvmToolchain(17)
+}
+
+// ====================================================================
+// NUEVO: Configuración obligatoria para usar JUnit 5 (Guía 15)
+// ====================================================================
+tasks.withType<Test>().configureEach {
+    useJUnitPlatform()
 }
